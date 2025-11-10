@@ -1,0 +1,40 @@
+Comments: MPG should also be by brand and preferably by specific model
+My corrections:
+
+# MPG MIN and MPG MAX missing values replace with mean value from Engine Volume (L)
+df['MPG MIN'] = df.groupby('Engine Volume (L)')['MPG MIN'].transform(lambda x: x.fillna(x.mean()))
+df['MPG MAX'] = df.groupby('Engine Volume (L)')['MPG MAX'].transform(lambda x: x.fillna(x.mean()))
+df['MPG MIN'] = df.groupby('Engine Volume (L)')['MPG MIN'].transform(lambda x: x.replace(0, x.mean()))
+df['MPG MAX'] = df.groupby('Engine Volume (L)')['MPG MAX'].transform(lambda x: x.replace(0, x.mean()))
+
+Outlier should be dropped
+My corrections: 
+
+# Filter outlier anomaly values from important fields
+df = df[df['Mileage'] < 500000]
+df = df[df['Engine Volume (L)'] > 0.3]
+df = df[df['Engine Volume (L)'] < 9.0]
+df = df[df['MPG MIN'] > 6.0]
+df = df[df['MPG MAX'] > 6.0]
+df = df[df['MPG MAX'] < 60.0]
+df = df[df['MPG MIN'] < 60.0]
+df = df[df['Price (USD)'] > 7000]
+df = df[df['Year'] > 2008.0]
+df = df[df['Year'] < 2024.0]
+
+Correlation do it in batches.
+
+Corrections: 
+
+# Obtain mean value from Manufacturer correlates to the fields Seller Rating, Seller Reviews Count, .etc
+df['Seller Rating'] = df.groupby('Manufacturer')['Seller Rating'].transform(lambda x: x.fillna(x.mean()).round(1))
+df['Seller Reviews Count'] = df.groupby('Manufacturer')['Seller Reviews Count'].transform(lambda x: x.fillna(x.mean().round(0)))
+df['Car Rating'] = df.groupby('Manufacturer')['Car Rating'].transform(lambda x: x.fillna(x.mean()))
+df['Car Reviews Count'] = df.groupby('Manufacturer')['Car Reviews Count'].transform(lambda x: x.fillna(x.mean()))
+df['Car Recommendation Rate'] = df.groupby('Manufacturer')['Car Recommendation Rate'].transform(lambda x: x.fillna(x.mean()))
+df['Car Comfort Rating'] = df.groupby('Manufacturer')['Car Comfort Rating'].transform(lambda x: x.fillna(x.mean()))
+df['Car Interior Rating'] = df.groupby('Manufacturer')['Car Interior Rating'].transform(lambda x: x.fillna(x.mean()))
+df['Car Performance Rating'] = df.groupby('Manufacturer')['Car Performance Rating'].transform(lambda x: x.fillna(x.mean()))
+df['Car Value Rating'] = df.groupby('Manufacturer')['Car Value Rating'].transform(lambda x: x.fillna(x.mean()))
+df['Car Exterior Rating'] = df.groupby('Manufacturer')['Car Exterior Rating'].transform(lambda x: x.fillna(x.mean()))
+df['Car Reliability Rating']  = df.groupby('Manufacturer')['Car Reliability Rating'].transform(lambda x: x.fillna(x.mean()))
